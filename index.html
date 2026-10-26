@@ -1,0 +1,1097 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PAMPHLET THE GAME BEGIN</title>
+<style>
+
+:root{
+  --green:#168a45;
+  --dark:#075c2c;
+  --light:#eaf8ef;
+  --white:#ffffff;
+  --wrong:#d9534f;
+  --correct:#168a45;
+  --gold:#e2a900;
+  --gray:#527060;
+}
+
+*{box-sizing:border-box;font-family:Arial,sans-serif}
+
+body{
+  margin:0;
+  background:linear-gradient(135deg,#e9f9ee,#bde8ca);
+  min-height:100vh;
+  color:#174d2d;
+}
+
+.container{max-width:900px;margin:auto;padding:20px}
+
+.card{
+  background:white;
+  border-radius:22px;
+  padding:25px;
+  box-shadow:0 8px 25px rgba(0,0,0,.12);
+  margin-bottom:18px;
+}
+
+h1,h2{text-align:center;color:var(--dark)}
+.subtitle{text-align:center;color:var(--gray)}
+
+label{font-weight:bold;display:block;margin-top:15px;margin-bottom:8px}
+
+select{
+  width:100%;padding:13px;border:2px solid #b8ddc4;
+  border-radius:12px;font-size:16px;background:#fff;
+}
+
+button{
+  border:none;border-radius:12px;padding:13px 18px;
+  font-size:16px;font-weight:bold;cursor:pointer;transition:.2s;
+}
+button:hover{transform:scale(1.02)}
+button:disabled{cursor:not-allowed;opacity:.75}
+
+.primary{background:var(--green);color:white;width:100%;margin-top:22px}
+.secondary{background:#e8f5ec;color:var(--dark);border:2px solid #b8ddc4}
+.danger{background:#fbe2e0;color:#9d2925;border:2px solid #efb5b1}
+.nav-btn{width:100%;margin-top:10px}
+
+.answer{
+  width:100%;background:#f2faf4;border:2px solid #c7e6d0;
+  color:#174d2d;margin:7px 0;text-align:left;
+}
+.answer:hover{background:#dcf3e4}
+.correct{background:#ccefd6!important;border-color:var(--correct)!important}
+.wrong{background:#ffd8d6!important;border-color:var(--wrong)!important}
+
+.hidden{display:none!important}
+
+.top{
+  display:flex;justify-content:space-between;align-items:center;
+  gap:10px;flex-wrap:wrap;
+}
+
+.badge{
+  background:var(--green);color:white;padding:8px 13px;
+  border-radius:20px;font-weight:bold;
+}
+
+.lives{background:#fff3d2;color:#765400}
+#questionText{text-align:center;font-size:27px;font-weight:bold;margin:25px 0;color:var(--dark)}
+#feedback{text-align:center;font-weight:bold;font-size:18px;margin:15px 0}
+
+.explanation{
+  background:var(--light);border-left:5px solid var(--green);
+  padding:15px;border-radius:12px;margin:15px 0;line-height:1.6;color:#245d38;
+}
+.explanation strong{color:var(--dark)}
+
+#nextBtn{width:100%;background:var(--green);color:white;margin-top:10px}
+
+.scoreboard{
+  margin-top:20px;display:grid;grid-template-columns:repeat(4,1fr);gap:8px;
+}
+.score{
+  background:#eff9f2;padding:10px;border-radius:10px;text-align:center;font-weight:bold;
+}
+.active{background:#bfe8ca;border:2px solid var(--green)}
+
+.turn-screen{
+  position:fixed;inset:0;background:rgba(7,92,44,.95);
+  display:flex;justify-content:center;align-items:center;z-index:10;color:white;
+}
+.turn-box{text-align:center;animation:flip .8s ease}
+.turn-box h1{color:white;font-size:45px}
+.turn-box p{font-size:22px}
+@keyframes flip{
+  from{transform:rotateY(90deg);opacity:0}
+  to{transform:rotateY(0);opacity:1}
+}
+
+.result{text-align:center}
+.big-score{font-size:45px;color:var(--green);font-weight:bold}
+
+.feature-grid{
+  display:grid;grid-template-columns:repeat(2,1fr);gap:12px;margin-top:18px;
+}
+.feature-card{
+  background:#f2faf4;border:2px solid #c7e6d0;border-radius:16px;padding:15px;
+}
+.feature-card h3{margin:0 0 7px;color:var(--dark)}
+.feature-card p{margin:5px 0;font-size:14px;color:#527060}
+
+.stats-grid{
+  display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin:15px 0;
+}
+.stat{
+  background:#f2faf4;border-radius:14px;padding:12px;text-align:center;
+}
+.stat strong{display:block;font-size:22px;color:var(--green)}
+
+.progress{
+  height:14px;background:#dceee2;border-radius:20px;overflow:hidden;margin:8px 0 15px;
+}
+.progress-bar{height:100%;background:var(--green);width:0%;transition:.3s}
+
+.hint{
+  background:#fff8df;border:2px solid #f0d98c;padding:12px;
+  border-radius:12px;margin-top:10px;color:#6b5500;
+}
+
+.lab-box{
+  background:#f7fbf8;border:2px solid #c7e6d0;border-radius:16px;padding:18px;
+}
+.lab-display{
+  font-size:34px;text-align:center;font-weight:bold;color:var(--dark);margin:12px;
+}
+.lab-row{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+input[type="range"]{width:100%}
+
+.pamphlet-image{
+  width:100%;max-height:650px;object-fit:contain;
+  border:3px dashed #9ac9a9;border-radius:16px;background:#f8fcf9;
+}
+
+.nav-row{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:12px}
+.small-text{text-align:center;color:#527060;font-size:13px}
+.tag{
+  display:inline-block;background:#e5f5e9;color:var(--dark);
+  padding:5px 9px;border-radius:15px;margin:3px;font-size:13px;font-weight:bold;
+}
+
+@media(max-width:600px){
+  .scoreboard,.stats-grid{grid-template-columns:repeat(2,1fr)}
+  .feature-grid,.lab-row,.nav-row{grid-template-columns:1fr}
+  #questionText{font-size:22px}
+}
+
+</style>
+</head>
+<body>
+
+
+
+<div class="container">
+
+  <!-- HOME / SETUP -->
+  <div class="card" id="setup">
+    <h1>🧮 PAMPHLET THE GAME BEGIN</h1>
+    <p class="subtitle">Basic Math Learning & Multiplayer Game</p>
+
+    <div class="feature-grid">
+      <div class="feature-card">
+        <h3>🧠 Adaptive Learning</h3>
+        <p>Question difficulty adjusts according to your performance.</p>
+      </div>
+      <div class="feature-card">
+        <h3>📊 Learning Analytics</h3>
+        <p>Track accuracy, speed, topic strengths, and progress.</p>
+      </div>
+      <div class="feature-card">
+        <h3>🔬 Math Lab</h3>
+        <p>Experiment with numbers and see mathematical relationships.</p>
+      </div>
+      <div class="feature-card">
+        <h3>💡 Guided Hints</h3>
+        <p>Use step-by-step hints before revealing the solution.</p>
+      </div>
+    </div>
+
+    <label>Number of Players</label>
+    <select id="playerCount">
+      <option value="1">1 Player</option>
+      <option value="2">2 Players</option>
+      <option value="3">3 Players</option>
+      <option value="4">4 Players</option>
+    </select>
+
+    <label>Choose a Topic</label>
+    <select id="topic">
+      <option value="integers">Integers</option>
+      <option value="fractions">Fractions</option>
+      <option value="decimals">Decimals</option>
+      <option value="percentages">Percentages</option>
+      <option value="order">Order of Operations</option>
+      <option value="mixed">Mixed</option>
+    </select>
+
+    <button class="primary" onclick="startGame()">START GAME</button>
+
+    <div class="nav-row">
+      <button class="secondary nav-btn" onclick="showPage('pamphletPage')">📖 VIEW PAMPHLET</button>
+      <button class="secondary nav-btn" onclick="showPage('labPage')">🔬 MATH LAB</button>
+    </div>
+  </div>
+
+  <!-- GAME -->
+  <div class="card hidden" id="game">
+    <div class="top">
+      <span class="badge" id="questionNumber">Question 1/10</span>
+      <span class="badge" id="playerBadge">Player 1</span>
+      <span class="badge" id="timerBadge">⏱ 15s</span>
+      <span class="badge lives" id="livesBadge">❤️❤️❤️</span>
+    </div>
+
+    <div id="questionText"></div>
+    <div id="answers"></div>
+
+    <button class="secondary nav-btn" id="hintBtn" onclick="showHint()">💡 USE HINT</button>
+    <div id="hintBox" class="hint hidden"></div>
+
+    <div id="feedback"></div>
+
+    <div id="explanation" class="explanation hidden"></div>
+
+    <button id="nextBtn" class="hidden">NEXT ➜</button>
+    <button class="secondary nav-btn" onclick="confirmBackToHome()">↩ BACK TO HOME</button>
+
+    <div class="scoreboard" id="scoreboard"></div>
+  </div>
+
+  <!-- RESULTS -->
+  <div class="card hidden" id="results">
+    <div class="result">
+      <h1>🏆 Game Finished!</h1>
+      <div id="finalResult"></div>
+      <div id="learningReport"></div>
+      <button class="primary" onclick="resetGame()">PLAY AGAIN</button>
+      <button class="secondary nav-btn" onclick="showPage('setup')">↩ BACK TO HOME</button>
+    </div>
+  </div>
+
+  <!-- PAMPHLET PAGE -->
+  <div class="card hidden" id="pamphletPage">
+    <img id="pamphletImage" class="pamphlet-image"
+         src="pamphlet.jpg"
+         alt="Math Pamphlet">
+
+    <button class="primary" onclick="showPage('setup')">↩ BACK TO HOME</button>
+  </div>
+
+  <!-- MATH LAB PAGE -->
+  <div class="card hidden" id="labPage">
+    <h1>🔬 Math Lab</h1>
+    <p class="subtitle">Experiment with numbers and observe mathematical relationships.</p>
+
+    <div class="lab-box">
+      <h2>Percentage Explorer</h2>
+      <div class="lab-row">
+        <div>
+          <label>Base Number</label>
+          <input id="labBase" type="range" min="1" max="1000" value="200"
+                 oninput="updateLab()">
+          <p class="small-text"><span id="labBaseValue">200</span></p>
+        </div>
+        <div>
+          <label>Percentage</label>
+          <input id="labPercent" type="range" min="0" max="100" value="25"
+                 oninput="updateLab()">
+          <p class="small-text"><span id="labPercentValue">25</span>%</p>
+        </div>
+      </div>
+
+      <div class="lab-display" id="labResult">25% of 200 = 50</div>
+      <p class="small-text">
+        Move the sliders to see how changing a variable changes the result.
+      </p>
+    </div>
+
+    <div class="feature-grid">
+      <div class="feature-card">
+        <h3>🧪 STEM Connection</h3>
+        <p>
+          The Math Lab demonstrates experimentation, variables, relationships,
+          observation, and mathematical modeling.
+        </p>
+      </div>
+      <div class="feature-card">
+        <h3>📈 Think Like a Scientist</h3>
+        <p>
+          Change one value, observe the result, and identify the relationship
+          between the variables.
+        </p>
+      </div>
+    </div>
+
+    <button class="primary" onclick="showPage('setup')">↩ BACK TO HOME</button>
+  </div>
+
+</div>
+
+<!-- TURN SCREEN -->
+<div class="turn-screen hidden" id="turnScreen">
+  <div class="turn-box">
+    <h1 id="turnTitle">Player 1</h1>
+    <p>Get ready! It's your turn.</p>
+  </div>
+</div>
+
+
+
+<script>
+let playerCount = 1;
+let topic = "integers";
+let currentPlayer = 0;
+let questionNo = 0;
+let scores = [];
+let lives = [];
+let correctAnswers = [];
+let totalAnswered = [];
+let responseTimes = [];
+let questionStartTime = 0;
+let currentAnswer = null;
+let currentExplanation = "";
+let currentQuestion = null;
+let answered = false;
+let hintUsed = false;
+let selectedTopicForQuestion = "";
+const totalQuestions = 10;
+let timerInterval = null;
+let timeLeft = 15;
+let gameQuestions = [];
+
+const $ = id => document.getElementById(id);
+
+/* =========================
+   QUESTION BANK
+========================= */
+const questionBank = {
+
+  decimals: [
+
+    {
+      q:"What is 0.6 + 0.2 = ?",
+      options:["0.7","0.8","0.9","1.0"],
+      answer:"0.8",
+      explanation:"Add the decimal numbers: 0.6 + 0.2 = 0.8."
+    },
+
+    {
+      q:"What is 2.5 − 1.3 = ?",
+      options:["1.0","1.1","1.2","1.3"],
+      answer:"1.2",
+      explanation:"Subtract 1.3 from 2.5: 2.5 − 1.3 = 1.2."
+    },
+
+    {
+      q:"What is 0.5 × 4 = ?",
+      options:["1","2","2.5","4.5"],
+      answer:"2",
+      explanation:"Multiply 0.5 by 4: 0.5 + 0.5 + 0.5 + 0.5 = 2."
+    },
+
+    {
+      q:"What is 3.6 ÷ 2 = ?",
+      options:["1.6","1.8","2.0","2.8"],
+      answer:"1.8",
+      explanation:"Divide 3.6 into 2 equal parts: 3.6 ÷ 2 = 1.8."
+    },
+
+    {
+      q:"Which is the smallest?",
+      options:["0.9","0.5","0.7","0.3"],
+      answer:"0.3",
+      explanation:"When comparing the decimals, 0.3 has the smallest value."
+    },
+    {q:"What is 1.25 + 0.5?",options:["1.30", "1.50", "1.75", "2.00"],answer:"1.75",explanation:"Align the decimal points: 1.25 + 0.50 = 1.75."},
+    {q:"What is 5.7 − 2.4?",options:["2.3", "3.1", "3.3", "3.5"],answer:"3.3",explanation:"Subtract the decimal numbers: 5.7 − 2.4 = 3.3."},
+    {q:"What is 0.3 × 6?",options:["0.18", "1.2", "1.8", "2.0"],answer:"1.8",explanation:"0.3 multiplied by 6 equals 1.8."},
+    {q:"What is 4.8 ÷ 4?",options:["1.2", "1.4", "1.6", "2.0"],answer:"1.2",explanation:"4.8 divided by 4 equals 1.2."},
+    {q:"What is 2.35 + 1.20?",options:["3.45", "3.55", "3.65", "4.55"],answer:"3.55",explanation:"Add hundredths and tenths: 2.35 + 1.20 = 3.55."},
+    {q:"What is 6.4 − 0.9?",options:["5.3", "5.5", "5.7", "6.3"],answer:"5.5",explanation:"Subtract 0.9 from 6.4 to get 5.5."},
+    {q:"What is 1.2 × 3?",options:["2.6", "3.2", "3.6", "4.2"],answer:"3.6",explanation:"1.2 multiplied by 3 equals 3.6."},
+    {q:"What is 7.5 ÷ 5?",options:["1.2", "1.5", "2.5", "3.5"],answer:"1.5",explanation:"7.5 divided by 5 equals 1.5."},
+    {q:"Which is greatest?",options:["0.45", "0.54", "0.405", "0.5"],answer:"0.54",explanation:"0.54 is greater than 0.50, 0.45, and 0.405."},
+    {q:"What is 0.75 + 0.15?",options:["0.80", "0.85", "0.90", "1.00"],answer:"0.90",explanation:"75 hundredths plus 15 hundredths equals 90 hundredths, or 0.90."}
+
+  ],
+
+
+  percentages: [
+
+    {
+      q:"What is 20% of 50?",
+      options:["5","10","15","20"],
+      answer:"10",
+      explanation:"20% means 20 out of 100. Calculate 50 × 0.20 = 10."
+    },
+
+    {
+      q:"Convert 0.25 to a percentage.",
+      options:["2.5%","20%","25%","50%"],
+      answer:"25%",
+      explanation:"Multiply the decimal by 100: 0.25 × 100 = 25%."
+    },
+
+    {
+      q:"Convert 40% to a decimal.",
+      options:["0.04","0.4","4.0","40"],
+      answer:"0.4",
+      explanation:"Divide the percentage by 100: 40 ÷ 100 = 0.4."
+    },
+
+    {
+      q:"What is 50% of 80?",
+      options:["20","30","40","50"],
+      answer:"40",
+      explanation:"50% means half. Half of 80 is 40."
+    },
+
+    {
+      q:"A bag costs ₱500 and has a 20% discount. How much is the discount?",
+      options:["₱50","₱75","₱100","₱120"],
+      answer:"₱100",
+      explanation:"Find 20% of ₱500: 500 × 0.20 = ₱100."
+    },
+    {q:"What is 10% of 250?",options:["15", "20", "25", "50"],answer:"25",explanation:"250 × 0.10 = 25."},
+    {q:"Convert 75% to a decimal.",options:["0.075", "0.75", "7.5", "75"],answer:"0.75",explanation:"Divide 75 by 100 to get 0.75."},
+    {q:"What is 25% of 200?",options:["25", "40", "50", "75"],answer:"50",explanation:"25% is one-fourth. 200 ÷ 4 = 50."},
+    {q:"Convert 0.6 to a percentage.",options:["6%", "16%", "60%", "600%"],answer:"60%",explanation:"Multiply 0.6 by 100 to get 60%."},
+    {q:"What is 15% of 100?",options:["10", "15", "20", "25"],answer:"15",explanation:"100 × 0.15 = 15."},
+    {q:"A score of 18 out of 20 is what percentage?",options:["80%", "85%", "90%", "95%"],answer:"90%",explanation:"18 ÷ 20 × 100 = 90%."},
+    {q:"What is 30% of 90?",options:["18", "27", "30", "36"],answer:"27",explanation:"90 × 0.30 = 27."},
+    {q:"Increase 100 by 10%. What is the new value?",options:["105", "110", "120", "200"],answer:"110",explanation:"10% of 100 is 10. Add it to 100 to get 110."},
+    {q:"What is 5% of 400?",options:["10", "15", "20", "25"],answer:"20",explanation:"400 × 0.05 = 20."},
+    {q:"Convert 125% to a decimal.",options:["0.125", "1.25", "12.5", "125"],answer:"1.25",explanation:"Divide 125 by 100 to get 1.25."}
+
+  ],
+
+
+  integers: [
+
+    {
+      q:"What is −4 + 7 = ?",
+      options:["−11","−3","3","11"],
+      answer:"3",
+      explanation:"Starting at −4 and adding 7 moves 7 steps to the right: −4 + 7 = 3."
+    },
+
+    {
+      q:"What is 8 + (−5) = ?",
+      options:["−13","−3","3","13"],
+      answer:"3",
+      explanation:"Adding a negative is like subtracting: 8 − 5 = 3."
+    },
+
+    {
+      q:"What is −6 − 2 = ?",
+      options:["−8","−4","4","8"],
+      answer:"−8",
+      explanation:"Subtracting 2 from −6 moves 2 more steps left: −6 − 2 = −8."
+    },
+
+    {
+      q:"What is −4 × (−2) = ?",
+      options:["−8","−6","6","8"],
+      answer:"8",
+      explanation:"A negative multiplied by a negative gives a positive. 4 × 2 = 8, so the answer is 8."
+    },
+
+    {
+      q:"What is 12 ÷ (−3) = ?",
+      options:["−4","−3","3","4"],
+      answer:"−4",
+      explanation:"A positive divided by a negative gives a negative: 12 ÷ 3 = 4, so the answer is −4."
+    },
+    {q:"What is −9 + 4?",options:["−13", "−5", "5", "13"],answer:"−5",explanation:"Starting at −9 and moving 4 steps right gives −5."},
+    {q:"What is 7 − 12?",options:["−5", "−4", "4", "5"],answer:"−5",explanation:"Subtracting 12 from 7 gives −5."},
+    {q:"What is −3 × 5?",options:["−15", "−8", "8", "15"],answer:"−15",explanation:"A negative times a positive is negative. 3 × 5 = 15."},
+    {q:"What is −24 ÷ (−6)?",options:["−4", "−3", "3", "4"],answer:"4",explanation:"A negative divided by a negative is positive: 24 ÷ 6 = 4."},
+    {q:"What is −7 + (−6)?",options:["−13", "−1", "1", "13"],answer:"−13",explanation:"Add the absolute values and keep the negative sign: −7 + (−6) = −13."},
+    {q:"What is 15 + (−9)?",options:["−24", "−6", "6", "24"],answer:"6",explanation:"Adding −9 means subtracting 9: 15 − 9 = 6."},
+    {q:"What is −5 − (−3)?",options:["−8", "−2", "2", "8"],answer:"−2",explanation:"Subtracting a negative becomes addition: −5 + 3 = −2."},
+    {q:"What is 6 × (−4)?",options:["−24", "−10", "10", "24"],answer:"−24",explanation:"A positive times a negative is negative. 6 × 4 = 24."},
+    {q:"What is −18 ÷ 3?",options:["−6", "−3", "3", "6"],answer:"−6",explanation:"A negative divided by a positive is negative. 18 ÷ 3 = 6."},
+    {q:"Which integer is greatest?",options:["−8", "−2", "−5", "−10"],answer:"−2",explanation:"Among negative numbers, the number closest to zero is greatest."}
+
+  ],
+
+
+  fractions: [
+
+    {
+      q:"1/4 + 1/4 = ?",
+      options:["1/4","1/2","2/3","1"],
+      answer:"1/2",
+      explanation:"Add the numerators: 1/4 + 1/4 = 2/4, which simplifies to 1/2."
+    },
+
+    {
+      q:"2/3 − 1/3 = ?",
+      options:["1/3","1/2","2/3","1"],
+      answer:"1/3",
+      explanation:"Since the denominators are the same, subtract the numerators: 2 − 1 = 1, giving 1/3."
+    },
+
+    {
+      q:"Simplify 3/6.",
+      options:["1/2","1/3","2/3","3/4"],
+      answer:"1/2",
+      explanation:"Divide both 3 and 6 by 3: 3/6 = 1/2."
+    },
+
+    {
+      q:"2/5 × 1/2 = ?",
+      options:["1/5","2/7","3/5","1/2"],
+      answer:"1/5",
+      explanation:"Multiply the numerators and denominators: (2 × 1)/(5 × 2) = 2/10 = 1/5."
+    },
+
+    {
+      q:"Which is the largest?",
+      options:["1/4","1/2","3/4","1/3"],
+      answer:"3/4",
+      explanation:"3/4 is greater than 1/2, 1/3, and 1/4."
+    },
+    {q:"1/2 + 1/4 = ?",options:["1/4", "1/2", "3/4", "1"],answer:"3/4",explanation:"Convert 1/2 to 2/4, then add: 2/4 + 1/4 = 3/4."},
+    {q:"3/4 − 1/4 = ?",options:["1/4", "1/2", "3/4", "1"],answer:"1/2",explanation:"3/4 − 1/4 = 2/4, which simplifies to 1/2."},
+    {q:"What is 2/3 × 3/4?",options:["1/2", "2/7", "5/7", "3/4"],answer:"1/2",explanation:"Multiply to get 6/12, then simplify to 1/2."},
+    {q:"What is 1/2 ÷ 1/4?",options:["1/8", "1/2", "2", "4"],answer:"2",explanation:"Multiply by the reciprocal: 1/2 × 4/1 = 2."},
+    {q:"Simplify 8/12.",options:["1/2", "2/3", "3/4", "4/5"],answer:"2/3",explanation:"Divide the numerator and denominator by 4: 8/12 = 2/3."},
+    {q:"2/5 + 1/5 = ?",options:["1/5", "2/5", "3/5", "3/10"],answer:"3/5",explanation:"Add the numerators because the denominators match: 2/5 + 1/5 = 3/5."},
+    {q:"5/6 − 1/6 = ?",options:["1/6", "2/3", "4/6", "5/6"],answer:"2/3",explanation:"5/6 − 1/6 = 4/6, which simplifies to 2/3."},
+    {q:"Which fraction equals 1/2?",options:["2/3", "3/6", "4/6", "5/6"],answer:"3/6",explanation:"3/6 simplifies to 1/2 when both terms are divided by 3."},
+    {q:"What is 3/5 × 5/6?",options:["1/2", "2/3", "3/4", "5/6"],answer:"1/2",explanation:"Multiply to get 15/30, then simplify to 1/2."},
+    {q:"Which is the smallest?",options:["1/2", "1/5", "1/3", "1/4"],answer:"1/5",explanation:"For unit fractions, a larger denominator means a smaller value."}
+
+  ],
+
+
+  order: [
+
+    {
+      q:"6 + 2 × 3 = ?",
+      options:["12","18","24","10"],
+      answer:"12",
+      explanation:"Multiply first: 2 × 3 = 6. Then add: 6 + 6 = 12."
+    },
+
+    {
+      q:"15 − 8 ÷ 2 = ?",
+      options:["3","7","11","14"],
+      answer:"11",
+      explanation:"Divide first: 8 ÷ 2 = 4. Then subtract: 15 − 4 = 11."
+    },
+
+    {
+      q:"(3 + 5) × 2 = ?",
+      options:["10","13","16","20"],
+      answer:"16",
+      explanation:"Solve inside the parentheses first: 3 + 5 = 8. Then multiply: 8 × 2 = 16."
+    },
+
+    {
+      q:"20 ÷ 4 + 3 = ?",
+      options:["5","8","9","11"],
+      answer:"8",
+      explanation:"Divide first: 20 ÷ 4 = 5. Then add: 5 + 3 = 8."
+    },
+
+    {
+      q:"10 − (2 × 3) = ?",
+      options:["4","6","8","24"],
+      answer:"4",
+      explanation:"Multiply inside the parentheses first: 2 × 3 = 6. Then subtract: 10 − 6 = 4."
+    },
+    {q:"4 + 3 × 2 = ?",options:["10", "14", "11", "7"],answer:"10",explanation:"Multiply first: 3 × 2 = 6. Then 4 + 6 = 10."},
+    {q:"(12 − 4) ÷ 2 = ?",options:["2", "4", "6", "8"],answer:"4",explanation:"Parentheses first: 12 − 4 = 8. Then 8 ÷ 2 = 4."},
+    {q:"18 ÷ 3 × 2 = ?",options:["3", "6", "12", "18"],answer:"12",explanation:"Multiplication and division go left to right: 18 ÷ 3 = 6, then 6 × 2 = 12."},
+    {q:"7 + 12 ÷ 4 = ?",options:["4", "10", "19", "28"],answer:"10",explanation:"Divide first: 12 ÷ 4 = 3. Then 7 + 3 = 10."},
+    {q:"(6 + 2) × (5 − 3) = ?",options:["10", "12", "16", "18"],answer:"16",explanation:"Solve the parentheses first: 8 × 2 = 16."},
+    {q:"24 − 4 × 5 = ?",options:["4", "20", "100", "16"],answer:"4",explanation:"Multiply first: 4 × 5 = 20. Then 24 − 20 = 4."},
+    {q:"30 ÷ (2 + 3) = ?",options:["5", "6", "10", "15"],answer:"6",explanation:"Parentheses first: 2 + 3 = 5. Then 30 ÷ 5 = 6."},
+    {q:"5 × 2 + 7 = ?",options:["17", "45", "19", "12"],answer:"17",explanation:"Multiply first: 5 × 2 = 10. Then add 7 to get 17."},
+    {q:"16 ÷ 4 + 6 × 2 = ?",options:["14", "16", "18", "20"],answer:"16",explanation:"Do division and multiplication first: 16 ÷ 4 = 4 and 6 × 2 = 12. Then 4 + 12 = 16."},
+    {q:"(10 − 6)² = ?",options:["8", "12", "16", "20"],answer:"16",explanation:"Parentheses first: 10 − 6 = 4. Then square 4: 4² = 16."}
+
+  ]
+
+};
+
+/* =========================
+   NAVIGATION
+========================= */
+
+function hideAllPages(){
+  ["setup","game","results","pamphletPage","labPage"].forEach(id=>{
+    $(id).classList.add("hidden");
+  });
+}
+
+function showPage(id){
+  hideAllPages();
+  $(id).classList.remove("hidden");
+  window.scrollTo({top:0,behavior:"smooth"});
+}
+
+function confirmBackToHome(){
+  if(confirm("Leave the current game? Your current progress will be lost.")){
+    resetGame();
+  }
+}
+
+function resetGame(){
+  clearInterval(timerInterval);
+  $("turnScreen").classList.add("hidden");
+  currentPlayer = 0;
+  questionNo = 0;
+  scores = [];
+  lives = [];
+  correctAnswers = [];
+  totalAnswered = [];
+  responseTimes = [];
+  answered = false;
+  showPage("setup");
+}
+
+/* =========================
+   START GAME
+========================= */
+
+function startGame(){
+  clearInterval(timerInterval);
+  playerCount = Number($("playerCount").value);
+  topic = $("topic").value;
+  currentPlayer = 0;
+  questionNo = 0;
+
+  scores = Array(playerCount).fill(0);
+  lives = Array(playerCount).fill(3);
+  correctAnswers = Array(playerCount).fill(0);
+  totalAnswered = Array(playerCount).fill(0);
+  responseTimes = Array(playerCount).fill(0);
+
+  // Build a pool from the chosen topic, or all topics for Mixed.
+  const topics = topic === "mixed"
+    ? ["integers","fractions","decimals","percentages","order"]
+    : [topic];
+
+  let pool = topics.flatMap(topicName =>
+    questionBank[topicName].map(question => ({
+      ...question,
+      topicName
+    }))
+  );
+
+  // Shuffle once, then take 10 distinct questions: no repeats in a game.
+  pool.sort(() => Math.random() - 0.5);
+  gameQuestions = pool.slice(0, totalQuestions);
+
+  $("results").classList.add("hidden");
+  $("setup").classList.add("hidden");
+  $("game").classList.remove("hidden");
+
+  updateScores();
+  showTurnScreen();
+}
+
+/* =========================
+   TURN SCREEN
+========================= */
+
+function showTurnScreen(){
+  if(lives[currentPlayer] <= 0){
+    advanceToNextAlivePlayer();
+    return;
+  }
+
+  $("turnTitle").textContent = "Player " + (currentPlayer + 1);
+  $("turnScreen").classList.remove("hidden");
+
+  setTimeout(()=>{
+    $("turnScreen").classList.add("hidden");
+    nextQuestion();
+  },1000);
+}
+
+function advanceToNextAlivePlayer(){
+  let attempts = 0;
+  do{
+    currentPlayer = (currentPlayer + 1) % playerCount;
+    attempts++;
+  }while(lives[currentPlayer] <= 0 && attempts <= playerCount);
+
+  if(lives[currentPlayer] <= 0){
+    finishGame();
+  }else{
+    showTurnScreen();
+  }
+}
+
+/* =========================
+   NEXT QUESTION
+========================= */
+
+function nextQuestion(){
+  clearInterval(timerInterval);
+
+  if(questionNo >= totalQuestions){
+    finishGame();
+    return;
+  }
+
+  questionNo++;
+  answered = false;
+  hintUsed = false;
+  timeLeft = 15;
+
+  $("feedback").textContent = "";
+  $("hintBox").classList.add("hidden");
+  $("hintBox").innerHTML = "";
+  $("hintBtn").disabled = false;
+  $("explanation").classList.add("hidden");
+  $("explanation").innerHTML = "";
+  $("nextBtn").classList.add("hidden");
+
+  $("questionNumber").textContent =
+    "Question " + questionNo + "/" + totalQuestions;
+  $("playerBadge").textContent = "Player " + (currentPlayer + 1);
+
+  updateLives();
+  makeQuestion();
+  updateScores();
+
+  questionStartTime = performance.now();
+  startTimer();
+}
+
+/* =========================
+   ADAPTIVE QUESTION SYSTEM
+========================= */
+
+function getDifficulty(){
+  const answeredCount = totalAnswered[currentPlayer];
+  const accuracy = answeredCount === 0
+    ? 0.5
+    : correctAnswers[currentPlayer] / answeredCount;
+
+  if(answeredCount < 2) return "medium";
+  if(accuracy >= 0.80) return "hard";
+  if(accuracy < 0.50) return "easy";
+  return "medium";
+}
+
+function makeQuestion(){
+  const question = gameQuestions[questionNo - 1];
+  selectedTopicForQuestion = question.topicName;
+  currentQuestion = question;
+  currentAnswer = question.answer;
+  currentExplanation = question.explanation;
+
+  $("questionText").textContent = question.q;
+  $("answers").innerHTML = "";
+
+  const shuffled = [...question.options].sort(() => Math.random() - 0.5);
+
+  shuffled.forEach(option => {
+    const button = document.createElement("button");
+    button.className = "answer";
+    button.textContent = option;
+    button.onclick = () => checkAnswer(button, option);
+    $("answers").appendChild(button);
+  });
+}
+
+/* =========================
+   FIFTEEN-SECONDS TIMER
+========================= */
+function startTimer(){
+  clearInterval(timerInterval);
+  timeLeft = 15;
+  updateTimerDisplay();
+
+  timerInterval = setInterval(() => {
+    timeLeft--;
+    updateTimerDisplay();
+
+    if(timeLeft <= 0 && !answered){
+      clearInterval(timerInterval);
+      handleTimeout();
+    }
+  }, 1000);
+}
+
+function updateTimerDisplay(){
+  const timer = $("timerBadge");
+  if(timer){
+    timer.textContent = "⏱ " + timeLeft + "s";
+    timer.style.background = timeLeft <= 10 ? "#b42318" : "";
+  }
+}
+
+function handleTimeout(){
+  if(answered) return;
+
+  answered = true;
+  const elapsed = (performance.now() - questionStartTime) / 1000;
+  responseTimes[currentPlayer] += Math.min(elapsed, 15);
+  totalAnswered[currentPlayer]++;
+  lives[currentPlayer]--;
+
+  document.querySelectorAll(".answer").forEach(btn => {
+    btn.disabled = true;
+    if(btn.textContent === currentAnswer) btn.classList.add("correct");
+  });
+
+  $("feedback").textContent =
+    "⏰ Time's up! The correct answer is " + currentAnswer + ".";
+
+  $("explanation").innerHTML =
+    "<strong>💡 Explanation:</strong><br>" + currentExplanation;
+  $("explanation").classList.remove("hidden");
+  updateTimerDisplay();
+
+  if(lives[currentPlayer] <= 0){
+    $("feedback").innerHTML += "<br>💔 You used all 3 lives.";
+  }
+
+  $("nextBtn").classList.remove("hidden");
+  updateLives();
+  updateScores();
+}
+
+/* =========================
+   HINT SYSTEM
+========================= */
+
+function showHint(){
+  if(answered || hintUsed) return;
+
+  hintUsed = true;
+  $("hintBtn").disabled = true;
+
+  let hint = "Break the problem into smaller steps and identify the operation you need first.";
+
+  if(selectedTopicForQuestion === "order")
+    hint = "Remember PEMDAS: solve parentheses, exponents, multiplication/division, then addition/subtraction.";
+  else if(selectedTopicForQuestion === "fractions")
+    hint = "Look at the denominators first. If they are the same, work with the numerators.";
+  else if(selectedTopicForQuestion === "percentages")
+    hint = "Convert the percentage to a decimal by dividing it by 100.";
+  else if(selectedTopicForQuestion === "decimals")
+    hint = "Line up decimal points carefully before adding or subtracting.";
+  else if(selectedTopicForQuestion === "integers")
+    hint = "Pay attention to the signs (+ or −) and remember the rules for positive and negative numbers.";
+
+  $("hintBox").innerHTML = "<strong>💡 Hint:</strong> " + hint;
+  $("hintBox").classList.remove("hidden");
+}
+
+/* =========================
+   CHECK ANSWER
+========================= */
+
+function checkAnswer(button,value){
+  if(answered) return;
+
+  answered = true;
+  clearInterval(timerInterval);
+
+  const elapsed = (performance.now() - questionStartTime) / 1000;
+  responseTimes[currentPlayer] += elapsed;
+  totalAnswered[currentPlayer]++;
+
+  const buttons = document.querySelectorAll(".answer");
+
+  buttons.forEach(btn=>{
+    btn.disabled = true;
+    if(btn.textContent === currentAnswer)
+      btn.classList.add("correct");
+  });
+
+  if(value === currentAnswer){
+    scores[currentPlayer]++;
+    correctAnswers[currentPlayer]++;
+
+    $("feedback").textContent = "✅ Correct! Great job!";
+    button.classList.add("correct");
+  }else{
+    lives[currentPlayer]--;
+
+    $("feedback").textContent =
+      "❌ Incorrect. The correct answer is " + currentAnswer + ".";
+
+    button.classList.add("wrong");
+    updateLives();
+  }
+
+  $("explanation").innerHTML =
+    "<strong>💡 Explanation:</strong><br>" + currentExplanation;
+
+  $("explanation").classList.remove("hidden");
+  updateTimerDisplay();
+
+  if(lives[currentPlayer] <= 0){
+    $("feedback").innerHTML += "<br>💔 You used all 3 lives.";
+  }
+
+  $("nextBtn").classList.remove("hidden");
+  updateScores();
+}
+
+/* =========================
+   NEXT PLAYER / CONTINUE
+========================= */
+
+$("nextBtn").onclick = function(){
+  if(questionNo >= totalQuestions){
+    finishGame();
+    return;
+  }
+
+  advanceToNextAlivePlayer();
+};
+
+/* =========================
+   LIVES
+========================= */
+
+function updateLives(){
+  const count = Math.max(0,lives[currentPlayer] || 0);
+  $("livesBadge").textContent =
+    "❤️".repeat(count) + "🖤".repeat(3-count);
+}
+
+/* =========================
+   SCOREBOARD
+========================= */
+
+function updateScores(){
+  $("scoreboard").innerHTML = "";
+
+  for(let i=0;i<playerCount;i++){
+    const div = document.createElement("div");
+    div.className = "score";
+
+    if(i === currentPlayer) div.classList.add("active");
+
+    const answeredCount = totalAnswered[i];
+    const accuracy = answeredCount
+      ? Math.round((correctAnswers[i]/answeredCount)*100)
+      : 0;
+
+    div.innerHTML =
+      "Player " + (i+1) +
+      "<br>" + scores[i] + " point" +
+      (scores[i] !== 1 ? "s" : "") +
+      "<br>❤️ " + lives[i] +
+      "<br>🎯 " + accuracy + "%";
+
+    if(lives[i] <= 0){
+      div.innerHTML += "<br><small>ELIMINATED</small>";
+    }
+
+    $("scoreboard").appendChild(div);
+  }
+}
+
+/* =========================
+   RESULTS + PERSONALIZED REPORT
+========================= */
+
+function finishGame(){
+  $("game").classList.add("hidden");
+  $("results").classList.remove("hidden");
+
+  let highest = Math.max(...scores);
+  let winners = [];
+
+  scores.forEach((score,index)=>{
+    if(score === highest) winners.push("Player " + (index+1));
+  });
+
+  let resultText = "";
+
+  if(winners.length === 1){
+    resultText = `
+      <h2>🏆 ${winners[0]} Wins!</h2>
+      <p class="big-score">${highest} points</p>
+    `;
+  }else{
+    resultText = `
+      <h2>🤝 It's a Tie!</h2>
+      <p>${winners.join(" and ")} tied with</p>
+      <p class="big-score">${highest} points</p>
+    `;
+  }
+
+  resultText += "<hr>";
+
+  scores.forEach((score,index)=>{
+    const accuracy = totalAnswered[index]
+      ? Math.round((correctAnswers[index]/totalAnswered[index])*100)
+      : 0;
+
+    const avgTime = totalAnswered[index]
+      ? (responseTimes[index]/totalAnswered[index]).toFixed(1)
+      : "0.0";
+
+    resultText += `
+      <div class="feature-card" style="margin:10px 0;text-align:left">
+        <strong>Player ${index+1}</strong><br>
+        Score: ${score}/${totalAnswered[index] || totalQuestions}<br>
+        Accuracy: ${accuracy}%<br>
+        Average Response Time: ${avgTime}s<br>
+        Remaining Lives: ${lives[index]}
+      </div>
+    `;
+  });
+
+  $("finalResult").innerHTML = resultText;
+
+  let report = `<h2>📈 Personalized Learning Report</h2>`;
+
+  for(let i=0;i<playerCount;i++){
+    const accuracy = totalAnswered[i]
+      ? Math.round((correctAnswers[i]/totalAnswered[i])*100)
+      : 0;
+
+    let recommendation = "Continue practicing all five basic-math topics.";
+
+    if(accuracy >= 90)
+      recommendation = "Excellent performance! Try harder mixed problems.";
+    else if(accuracy >= 75)
+      recommendation = "Good progress! Practice the topics where mistakes occurred.";
+    else if(accuracy >= 50)
+      recommendation = "Keep practicing with hints and step-by-step solutions.";
+    else
+      recommendation = "Review the basic concepts and use the Math Lab before trying again.";
+
+    report += `
+      <div class="feature-card" style="text-align:left;margin:10px 0">
+        <h3>Player ${i+1}</h3>
+        <p><strong>Accuracy:</strong> ${accuracy}%</p>
+        <div class="progress">
+          <div class="progress-bar" style="width:${accuracy}%"></div>
+        </div>
+        <p><strong>Recommendation:</strong> ${recommendation}</p>
+      </div>
+    `;
+  }
+
+  $("learningReport").innerHTML = report;
+}
+
+/* =========================
+   MATH LAB
+========================= */
+
+function updateLab(){
+  const base = Number($("labBase").value);
+  const percent = Number($("labPercent").value);
+  const result = base * (percent/100);
+
+  $("labBaseValue").textContent = base;
+  $("labPercentValue").textContent = percent;
+  $("labResult").textContent =
+    percent + "% of " + base + " = " + result;
+}
+
+updateLab();
+</script>
+
+
+</body>
+</html>
